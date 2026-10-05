@@ -58,8 +58,8 @@ function NewReleaseForm() {
   }, [searchParams])
 
   function handleContinue() {
-    if (!templateId || !projectId || !signerName.trim()) {
-      setError('Please fill in the required fields: template, project, and signer name.')
+    if (!templateId || !projectId || !signerName.trim() || !signerEmail.trim() || !signerPhone.trim()) {
+      setError('Please fill in all required fields.')
       return
     }
     setError('')
@@ -194,7 +194,7 @@ function NewReleaseForm() {
             {/* Signer Email */}
             <div>
               <label className="block text-sm font-medium text-charcoal mb-1.5">
-                Signer Email <span className="text-charcoal/40">(optional)</span>
+                Signer Email <span className="text-red">*</span>
               </label>
               <input
                 type="email"
@@ -208,7 +208,7 @@ function NewReleaseForm() {
             {/* Signer Phone */}
             <div>
               <label className="block text-sm font-medium text-charcoal mb-1.5">
-                Signer Phone <span className="text-charcoal/40">(optional)</span>
+                Signer Phone <span className="text-red">*</span>
               </label>
               <input
                 type="tel"
@@ -237,9 +237,11 @@ function NewReleaseForm() {
                 {selectedTemplate.name}
               </h2>
               <div className="border border-charcoal/10 rounded-xl p-4 max-h-64 overflow-y-auto bg-cream/50">
-                <p className="text-sm text-charcoal/80 whitespace-pre-wrap leading-relaxed">
-                  {selectedTemplate.legal_text}
-                </p>
+                <div className="text-sm text-charcoal/80 leading-relaxed space-y-3">
+                  {selectedTemplate.legal_text.split('\n\n').map((paragraph, i) => (
+                    <p key={i}>{paragraph}</p>
+                  ))}
+                </div>
               </div>
             </div>
 

@@ -59,6 +59,14 @@ export default function PublicSignPage({ params }: { params: Promise<{ id: strin
       setError('Please enter your name.')
       return
     }
+    if (!signerEmail.trim()) {
+      setError('Please enter your email.')
+      return
+    }
+    if (!signerPhone.trim()) {
+      setError('Please enter your phone number.')
+      return
+    }
     if (!agreed) {
       setError('Please agree to the terms before signing.')
       return
@@ -170,7 +178,7 @@ export default function PublicSignPage({ params }: { params: Promise<{ id: strin
 
             <div>
               <label className="block text-sm font-medium text-charcoal mb-1.5">
-                Email <span className="text-charcoal/40">(optional)</span>
+                Email <span className="text-red">*</span>
               </label>
               <input
                 type="email"
@@ -183,7 +191,7 @@ export default function PublicSignPage({ params }: { params: Promise<{ id: strin
 
             <div>
               <label className="block text-sm font-medium text-charcoal mb-1.5">
-                Phone <span className="text-charcoal/40">(optional)</span>
+                Phone <span className="text-red">*</span>
               </label>
               <input
                 type="tel"
@@ -255,9 +263,11 @@ export default function PublicSignPage({ params }: { params: Promise<{ id: strin
             <div className="bg-white rounded-2xl border border-charcoal/10 p-6">
               <h2 className="text-lg font-semibold text-charcoal mb-3">{template.name}</h2>
               <div className="border border-charcoal/10 rounded-xl p-4 max-h-64 overflow-y-auto bg-cream/50">
-                <p className="text-sm text-charcoal/80 whitespace-pre-wrap leading-relaxed">
-                  {template.legal_text}
-                </p>
+                <div className="text-sm text-charcoal/80 leading-relaxed space-y-3">
+                  {template.legal_text.split('\n\n').map((paragraph, i) => (
+                    <p key={i}>{paragraph}</p>
+                  ))}
+                </div>
               </div>
             </div>
           )}

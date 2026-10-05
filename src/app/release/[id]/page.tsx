@@ -141,7 +141,16 @@ export default function ReleaseDetailPage({ params }: { params: Promise<{ id: st
 
     const projectName = release.projects?.name || 'release'
     const safeName = projectName.replace(/[^a-z0-9]/gi, '-').toLowerCase()
-    doc.save(`${safeName}-${release.signer_name.replace(/[^a-z0-9]/gi, '-').toLowerCase()}.pdf`)
+    const fileName = `${safeName}-${release.signer_name.replace(/[^a-z0-9]/gi, '-').toLowerCase()}.pdf`
+
+    // Use data URI approach to avoid blob: URLs leaking to iOS share sheet
+    const pdfDataUri = doc.output('datauristring')
+    const link = document.createElement('a')
+    link.href = pdfDataUri
+    link.download = fileName
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
   }
 
   if (loading) {
@@ -205,13 +214,13 @@ export default function ReleaseDetailPage({ params }: { params: Promise<{ id: st
               <p className="text-charcoal font-medium">{formatDate(release.signed_at)}</p>
             </div>
             {release.signer_email && (
-              <div>
+              <div className="col-span-2">
                 <p className="text-xs text-charcoal/50 uppercase tracking-wide">Email</p>
-                <p className="text-charcoal font-medium">{release.signer_email}</p>
+                <p className="text-charcoal font-medium break-all">{release.signer_email}</p>
               </div>
             )}
             {release.signer_phone && (
-              <div>
+              <div className="col-span-2">
                 <p className="text-xs text-charcoal/50 uppercase tracking-wide">Phone</p>
                 <p className="text-charcoal font-medium">{release.signer_phone}</p>
               </div>
